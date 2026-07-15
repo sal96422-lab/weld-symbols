@@ -25,6 +25,8 @@
     (othersize . "")
     (length . "")
     (pitch . "")
+    (otherlength . "")
+    (otherpitch . "")
     (field . "0")
     (allaround . "0")
     (tailon . "0")
@@ -450,6 +452,8 @@
           (set_tile "othersize" (weldsym:alist-get 'othersize *weldsym-last* ""))
           (set_tile "length" (weldsym:alist-get 'length *weldsym-last* ""))
           (set_tile "pitch" (weldsym:alist-get 'pitch *weldsym-last* ""))
+          (set_tile "otherlength" (weldsym:alist-get 'otherlength *weldsym-last* ""))
+          (set_tile "otherpitch" (weldsym:alist-get 'otherpitch *weldsym-last* ""))
           (set_tile "field" (weldsym:alist-get 'field *weldsym-last* "0"))
           (set_tile "allaround" (weldsym:alist-get 'allaround *weldsym-last* "0"))
           (set_tile "tailon" (weldsym:alist-get 'tailon *weldsym-last* "0"))
@@ -535,7 +539,7 @@
 (defun weldsym:tail-text (data)
   (weldsym:tail-line1 data))
 
-(defun weldsym:draw (arrow landing ref-end data / sign u pos-u draw-u n below above symbol side size othersize arrow-size other-size length pitch contour dir tail1 tail2 tail-text-offset tail1-y tail2-y)
+(defun weldsym:draw (arrow landing ref-end data / sign u pos-u draw-u n below above symbol side size othersize arrow-size other-size length pitch otherlength otherpitch arrow-length-pitch-text other-length-pitch-text length-text-offset symbol-offset contour dir tail1 tail2 tail-text-offset tail1-y tail2-y)
   (setq n '(0.0 1.0 0.0))
   (setq symbol (weldsym:alist-get 'symbol data "0"))
   (setq side (weldsym:alist-get 'side data "0"))
@@ -545,6 +549,8 @@
   (setq other-size (if (/= othersize "") othersize size))
   (setq length (weldsym:alist-get 'length data ""))
   (setq pitch (weldsym:alist-get 'pitch data ""))
+  (setq otherlength (weldsym:alist-get 'otherlength data ""))
+  (setq otherpitch (weldsym:alist-get 'otherpitch data ""))
   (setq contour (weldsym:alist-get 'contour data "0"))
   (setq dir (weldsym:alist-get 'dir data "0"))
   (setq sign (if (= dir "1") -1.0 1.0))
@@ -571,8 +577,9 @@
   (if (= (weldsym:alist-get 'field data "0") "1")
     (weldsym:draw-field-flag landing draw-u n))
 
-  (setq below (weldsym:add landing (weldsym:mul pos-u (weldsym:s 12.0))))
-  (setq above (weldsym:add landing (weldsym:mul pos-u (weldsym:s 12.0))))
+  (setq symbol-offset (cond ((and (= dir "1") (or (/= length "") (/= pitch "") (/= otherlength "") (/= otherpitch ""))) (weldsym:s 21.333333)) ((= dir "1") (weldsym:s 16.0)) (T (weldsym:s 12.0))))
+  (setq below (weldsym:add landing (weldsym:mul pos-u symbol-offset)))
+  (setq above (weldsym:add landing (weldsym:mul pos-u symbol-offset)))
 
   (if (or (= side "0") (= side "2"))
     (progn
@@ -588,16 +595,28 @@
     (weldsym:text-right (weldsym:add below (weldsym:add (weldsym:mul draw-u (weldsym:s -3.833333)) (weldsym:mul n (weldsym:s -7.0)))) arrow-size (weldsym:s 4.0)))
   (if (or (= side "1") (= side "2"))
     (weldsym:text-right (weldsym:add above (weldsym:add (weldsym:mul draw-u (weldsym:s -3.833333)) (weldsym:mul n (weldsym:s 4.0)))) other-size (weldsym:s 4.0)))
-  (if (and (/= length "") (/= pitch ""))
-    (weldsym:text (weldsym:add landing (weldsym:add (weldsym:mul u (weldsym:s 36.0)) (weldsym:mul n (weldsym:s -7.0)))) (strcat length "-" pitch) (weldsym:s 4.0))
-    (weldsym:text (weldsym:add landing (weldsym:add (weldsym:mul u (weldsym:s 36.0)) (weldsym:mul n (weldsym:s -7.0)))) length (weldsym:s 4.0)))
+  (setq arrow-length-pitch-text
+    (cond
+      ((and (/= length "") (/= pitch "")) (strcat length "-" pitch))
+      ((/= length "") length)
+      (T pitch)))
+  (setq other-length-pitch-text
+    (cond
+      ((and (/= otherlength "") (/= otherpitch "")) (strcat otherlength "-" otherpitch))
+      ((/= otherlength "") otherlength)
+      (T otherpitch)))
+  (setq length-text-offset (if (= dir "0") (weldsym:s 19.0) (- symbol-offset (weldsym:s 7.0))))
+  (if (and (or (= side "0") (= side "2")) (/= arrow-length-pitch-text ""))
+    (weldsym:text (weldsym:add landing (weldsym:add (weldsym:mul u length-text-offset) (weldsym:mul n (weldsym:s -7.0)))) arrow-length-pitch-text (weldsym:s 4.0)))
+  (if (and (or (= side "1") (= side "2")) (/= other-length-pitch-text ""))
+    (weldsym:text (weldsym:add landing (weldsym:add (weldsym:mul u length-text-offset) (weldsym:mul n (weldsym:s 4.0)))) other-length-pitch-text (weldsym:s 4.0)))
   (if (or (= (weldsym:alist-get 'tailon data "0") "1") (/= tail1 "") (/= tail2 ""))
     (progn
       (weldsym:draw-tail-fork ref-end u n)
       (weldsym:tail-text-entity (weldsym:add ref-end (weldsym:add (weldsym:mul u tail-text-offset) (weldsym:mul n tail1-y))) tail1 (weldsym:s 4.0) u)
       (weldsym:tail-text-entity (weldsym:add ref-end (weldsym:add (weldsym:mul u tail-text-offset) (weldsym:mul n tail2-y))) tail2 (weldsym:s 4.0) u))))
 
-(defun weldsym:run (preset-dir / arrow landing refpick ref-end data dist sign)
+(defun weldsym:run (preset-dir / arrow landing refpick ref-end data dist sign used-default has-length-pitch)
   (if preset-dir
     (setq *weldsym-dialog-dir* preset-dir)
     (setq *weldsym-dialog-dir* (weldsym:show-direction)))
@@ -613,19 +632,31 @@
               (setq sign (if (= *weldsym-dialog-dir* "1") -1.0 1.0))
               (if refpick
                 (progn
+                  (setq used-default nil)
                   (setq dist (abs (- (car refpick) (car landing))))
                   (if (< dist 1.0) (setq dist (distance landing refpick))))
-                (setq dist (weldsym:s 28.0)))
-              (setq ref-end (weldsym:add landing (weldsym:mul (list sign 0.0 0.0) dist)))
+                (progn
+                  (setq used-default T)
+                  (setq dist (weldsym:s 28.0))))
               (setq *weldsym-dialog-symbol* (weldsym:show-type))
               (if *weldsym-dialog-symbol*
                 (progn
                   (setq data (weldsym:show-options))
                   (if data
-                    (progn (weldsym:draw arrow landing ref-end data) (princ "\nWeld symbol created."))
+                    (progn
+                      (setq has-length-pitch
+                        (or
+                          (/= (weldsym:alist-get 'length data "") "")
+                          (/= (weldsym:alist-get 'pitch data "") "")
+                          (/= (weldsym:alist-get 'otherlength data "") "")
+                          (/= (weldsym:alist-get 'otherpitch data "") "")))
+                      (if (and used-default has-length-pitch)
+                        (setq dist (weldsym:s 33.333333)))
+                      (setq ref-end (weldsym:add landing (weldsym:mul (list sign 0.0 0.0) dist)))
+                      (weldsym:draw arrow landing ref-end data)
+                      (princ "\nWeld symbol created."))
                     (princ "\nWeld options cancelled.")))
                 (princ "\nWeld type cancelled.")))))))))
-
 (defun c:WELDSYM (/ oldcmdecho)
   (setq oldcmdecho (getvar "CMDECHO"))
   (setvar "CMDECHO" 0)

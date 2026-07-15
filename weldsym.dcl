@@ -39,8 +39,14 @@ weldsym_opts : dialog {
       : row {
         : edit_box { key = "size"; label = "Arrow size"; edit_width = 8; }
         : edit_box { key = "othersize"; label = "Other size"; edit_width = 8; }
-        : edit_box { key = "length"; label = "Length"; edit_width = 8; }
-        : edit_box { key = "pitch"; label = "Pitch"; edit_width = 8; }
+      }
+      : row {
+        : edit_box { key = "length"; label = "Arrow length"; edit_width = 8; }
+        : edit_box { key = "pitch"; label = "Arrow pitch"; edit_width = 8; }
+      }
+      : row {
+        : edit_box { key = "otherlength"; label = "Other length"; edit_width = 8; }
+        : edit_box { key = "otherpitch"; label = "Other pitch"; edit_width = 8; }
       }
     }
     : boxed_column {
