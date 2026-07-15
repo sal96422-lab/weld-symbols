@@ -1,0 +1,18 @@
+***MENUGROUP=WELDSYM
+
+***TOOLBARS
+**WELDSYM
+ID_WELDSYM [_Toolbar("WELDSYM", _Left, _Show, 0, 0, 1)]
+ID_WeldRight  [_Button("Weld Right", "weldright16.bmp", "weldright32.bmp")]WELDRIGHT 
+ID_WeldLeft   [_Button("Weld Left", "weldleft16.bmp", "weldleft32.bmp")]WELDLEFT 
+ID_WeldField  [_Button("Toggle Field Weld", "weldfield16.bmp", "weldfield32.bmp")]WELDFIELD 
+ID_WeldAround [_Button("Toggle Weld All Around", "weldaround16.bmp", "weldaround32.bmp")]WELDALLAROUND 
+ID_WeldTail   [_Button("Tail", "weldtail16.bmp", "weldtail32.bmp")]WELDTAIL 
+ID_WeldTail1  [_Button("1 LINE", "weldtail1-16.bmp", "weldtail1-32.bmp")]WELDTAILONE 
+ID_WeldTail2  [_Button("2 LINES", "weldtail2-16.bmp", "weldtail2-32.bmp")]WELDTAILTWO 
+
+
+
+
+
+
