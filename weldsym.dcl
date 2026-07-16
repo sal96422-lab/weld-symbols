@@ -9,12 +9,21 @@ weldsym_dir : dialog {
 }
 
 weldsym_type : dialog {
-  label = "Weld Type";
+  label = "Fillet Weld Type";
   : boxed_column {
-    label = "Pick weld symbol";
-    : column {
-      : image_button { key = "sym0"; width = 22; height = 9; fixed_width = true; fixed_height = true; color = 0; }
-      : text { label = "Fillet"; alignment = centered; }
+    label = "Choose fillet preset";
+    : row {
+      : column { : image_button { key = "type_arrow"; width = 24; height = 10; fixed_width = true; fixed_height = true; color = 0; } : text { label = "Arrow"; alignment = centered; } }
+      : column { : image_button { key = "type_other"; width = 24; height = 10; fixed_width = true; fixed_height = true; color = 0; } : text { label = "Other"; alignment = centered; } }
+      : column { : image_button { key = "type_both"; width = 24; height = 10; fixed_width = true; fixed_height = true; color = 0; } : text { label = "Double"; alignment = centered; } }
+    }
+    : row {
+      : column { : image_button { key = "type_arrow_len"; width = 15; height = 6; fixed_width = true; fixed_height = true; color = 0; } : text { label = "Arrow + L"; alignment = centered; } }
+      : column { : image_button { key = "type_other_len"; width = 15; height = 6; fixed_width = true; fixed_height = true; color = 0; } : text { label = "Other + L"; alignment = centered; } }
+      : column { : image_button { key = "type_both_len"; width = 15; height = 6; fixed_width = true; fixed_height = true; color = 0; } : text { label = "Double + L"; alignment = centered; } }
+    }
+    : row {
+      : column { : image_button { key = "type_stagger_len"; width = 24; height = 10; fixed_width = true; fixed_height = true; color = 0; } : text { label = "Stag + L"; alignment = centered; } }
     }
   }
   cancel_button;
@@ -32,9 +41,9 @@ weldsym_opts : dialog {
         : image_button { key = "side2"; width = 11; height = 5; fixed_width = true; fixed_height = true; color = 0; }
       }
       : row {
-        : text { label = "Arrow"; width = 11; alignment = centered; }
-        : text { label = "Other"; width = 11; alignment = centered; }
-        : text { label = "Both"; width = 11; alignment = centered; }
+        : text { key = "side_label0"; label = "Arrow"; width = 11; alignment = centered; }
+        : text { key = "side_label1"; label = "Other"; width = 11; alignment = centered; }
+        : text { key = "side_label2"; label = "Both"; width = 11; alignment = centered; }
       }
       : row {
         : edit_box { key = "size"; label = "Arrow size"; edit_width = 8; }
