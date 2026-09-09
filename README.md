@@ -6,15 +6,43 @@ This package adds commands and a toolbar for placing fillet weld symbols, then a
 
 ## Included Files
 
+- `Install-WeldSymbols.bat` - one-click Windows installer.
+- `Install-WeldSymbols.ps1` - installer script used by the BAT file.
 - `weldsym_cmd.lsp` - main editable source file.
 - `installed_weldsym_safe.lsp` - stable installed copy of the AutoLISP loader/tool.
 - `weldsym.lsp` - helper/source copy.
 - `weldsym.dcl` - dialog definition file.
 - `WELDSYM.mnu` - AutoCAD menu/toolbar source.
 - `weld*.bmp` - toolbar icon thumbnails.
+- `type_images/` - weld type picker thumbnails.
 - `README_STABLE.txt` - local stable-copy notes.
 
-## Install For AutoCAD 2027
+## One-Click Install
+
+1. Close AutoCAD.
+2. Download this repository as a ZIP from GitHub.
+3. Extract the ZIP to a normal folder.
+4. Double-click:
+
+   ```text
+   Install-WeldSymbols.bat
+   ```
+
+The installer finds AutoCAD support folders under `%APPDATA%\Autodesk`, copies all required files, creates layer-aware startup loading in `acaddoc.lsp`, and backs up any existing `acaddoc.lsp` before editing it.
+
+After installing, open AutoCAD and run:
+
+```text
+WELDTOOLBAR
+```
+
+If AutoCAD reports a security warning, add the AutoCAD support folder to Trusted Locations and reload:
+
+```lisp
+(load (findfile "weldsym_safe.lsp"))
+```
+
+## Manual Install For AutoCAD 2027
 
 1. Close AutoCAD.
 2. Download this repository as a ZIP, or clone it with Git.
@@ -27,9 +55,13 @@ This package adds commands and a toolbar for placing fillet weld symbols, then a
 4. Copy these files into that support folder:
 
    ```text
+   weldsym_cmd.lsp
    installed_weldsym_safe.lsp
    weldsym.dcl
    WELDSYM.mnu
+   weldsym_type_picker.ps1
+   weldsym_type_picker_server.ps1
+   type_images
    weldright16.bmp
    weldright32.bmp
    weldright64.bmp
@@ -56,6 +88,8 @@ This package adds commands and a toolbar for placing fillet weld symbols, then a
    ```text
    weldsym_safe.lsp
    ```
+
+   Or copy `weldsym_cmd.lsp` directly as `weldsym_safe.lsp`.
 
 6. In the same support folder, edit or create `acaddoc.lsp` and add this line:
 
